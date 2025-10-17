@@ -1,0 +1,8 @@
+apiVersion: swacd.swacd.io/v1alpha1
+kind: Tenant
+metadata:
+  name: tenant-sample
+spec:
+  lob: Cloud
+  environment: Dev
+  contactEmail: team@swacd.io
