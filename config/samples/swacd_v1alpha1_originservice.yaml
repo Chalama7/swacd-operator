@@ -1,0 +1,9 @@
+apiVersion: swacd.swacd.io/v1alpha1
+kind: OriginService
+metadata:
+  name: originservice-sample
+spec:
+  hostname: origin.swacd.internal
+  protocol: HTTP
+  port: 8080
+  healthCheckPath: /health
