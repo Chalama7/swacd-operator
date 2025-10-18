@@ -10,3 +10,4 @@ vendor/
 
 # Kubebuilder
 config/manager/kustomization.yaml
+.kcp/
