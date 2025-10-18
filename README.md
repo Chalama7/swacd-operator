@@ -1,195 +1,92 @@
-# 🧭 SWACD Operator — Local Development Setup and Flow
+# 👋 Hey there, I’m **Chalama Reddy Venna**
 
-This operator implements Kubernetes-style controllers for the **SWACD Control Plane PoC**, managing `Tenant` and `OriginService` custom resources.  
-It supports full local reconciliation using `make`, `kubebuilder`, and `controller-runtime`.
+![header](https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Chalama%20Reddy%20Venna&fontSize=45)
 
----
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=Chalama7&label=Profile%20Views&color=0e75b6&style=flat" alt="profile-views" />
+</p>
 
-## ⚙️ 1. Prerequisites
-
-Make sure you have the following installed locally:
-
-```bash
-# Install dependencies
-brew install go@1.24
-brew install kubectl
-brew install kind
-brew install make
-```
-
-Then verify versions:
-
-```bash
-go version
-kubectl version --client
-make --version
-```
+🎯 **Cloud, Network & Platform Engineer**  
+🚀 *Building the next-gen multi-tenant control planes with Kubernetes, Cloudflare & Akamai*  
 
 ---
 
-## 🧱 2. Project Structure
+## 🧠 About Me  
 
-```
-swacd-operator/
-├── api/
-│   └── v1alpha1/
-│       ├── tenant_types.go
-│       ├── originservice_types.go
-│       ├── groupversion_info.go
-│
-├── internal/
-│   └── controller/
-│       ├── tenant_controller.go
-│       └── originservice_controller.go
-│
-├── config/
-│   ├── crd/bases/
-│   │   ├── swacd.swacd.io_tenants.yaml
-│   │   └── swacd.swacd.io_originservices.yaml
-│   ├── samples/
-│   │   ├── swacd_v1alpha1_tenant.yaml
-│   │   └── swacd_v1alpha1_originservice.yaml
-│
-└── cmd/
-    └── main.go
-```
+I’m a hands-on engineer passionate about bridging **network engineering** and **cloud-native architecture**.  
+Currently working on **SWACD (Secure Web Application Control Plane Delivery)** — a Kubernetes-based multi-tenant control plane project at **JPMC (via Deloitte)** using **KCP**, **EKS**, **Cloudflare**, and **Akamai**.  
+
+I love solving complex infrastructure puzzles — from SD-WAN to service mesh, from Terraform to KCP controllers.
 
 ---
 
-## 🧩 3. Build and Install CRDs
+## 🧰 Core Skills  
 
-Generate CRDs and RBAC configs:
-```bash
-make generate
-make manifests
-```
-
-Install CRDs into your cluster:
-```bash
-make install
-```
-
-Verify CRDs:
-```bash
-kubectl get crds | grep swacd
-```
-
-You should see:
-```
-tenants.swacd.swacd.io
-originservices.swacd.swacd.io
-```
+- **Networking:** BGP · OSPF · VXLAN · EVPN · MPLS · DMVPN  
+- **Firewalls:** Palo Alto · Fortinet · Cisco ASA/FTD  
+- **Cloud & DevOps:** AWS · Azure · Terraform · Ansible · GitOps  
+- **CDN & Security:** Cloudflare · Akamai · WAF · DDoS · DNS · API Gateway  
+- **Kubernetes & Controllers:** KCP · CRDs · Controller-Runtime · Helm · KIND · EKS  
+- **Monitoring & Automation:** Grafana · Prometheus · Python  
 
 ---
 
-## 🚀 4. Run Controllers Locally
+## 🧑‍💻 Featured Project — SWACD Operator  
+> 🧩 Multi-tenant Kubernetes Operator for Cloudflare & Akamai orchestration  
+> **Tech Stack:** Go · KCP · KIND · EKS · CRDs · Controller-Runtime  
 
-Start both controllers:
-```bash
-make run
-```
-
-You’ll see logs like:
-```
-INFO setup starting manager
-INFO Starting Controller {"controller": "tenant"}
-INFO Starting Controller {"controller": "originservice"}
-```
+[👉 View Project Repo](https://github.com/Chalama7/swacd-operator)  
 
 ---
 
-## 🧠 5. Apply Sample CRDs
+## 🧠 Currently Exploring  
 
-### Tenant
-```bash
-kubectl apply -f config/samples/swacd_v1alpha1_tenant.yaml
-kubectl get tenants -o yaml
-```
-
-### OriginService
-```bash
-kubectl apply -f config/samples/swacd_v1alpha1_originservice.yaml --validate=false
-kubectl get originservices -o yaml
-```
+- Multi-cluster reconciliation using **SyncTargets**  
+- API composition and reconciliation patterns in **KCP**  
+- Cloudflare Ruleset & Akamai EdgeWorkers automation via CRDs  
+- AWS EKS sandbox and declarative edge configuration  
 
 ---
 
-## ✅ 6. Verify Reconciliation
+## 📫 Connect with Me  
 
-When running correctly, your logs should show:
+- 📧 **Email:** [crvenna25@gmail.com](mailto:crvenna25@gmail.com)  
+- 💼 **LinkedIn:** [linkedin.com/in/crvenna](https://linkedin.com/in/crvenna)  
+- 🐦 **Twitter:** [@v_chalamareddy](https://twitter.com/v_chalamareddy)  
+- 📸 **Instagram:** [@mr._.chalama](https://instagram.com/mr._.chalama)  
 
-```
-INFO  Tenant Spec details
-INFO  ✅ Reconciled Tenant
-INFO  🔍 OriginService Spec details
-INFO  ✅ Reconciled OriginService
-```
-
-And your CRDs should reflect updated status fields:
-
-```yaml
-status:
-  state: Active
-  lastChecked: "2025-10-18T16:08:59-05:00"
-  conditions:
-  - type: Ready
-    status: "True"
-    reason: Reconciled
-    message: OriginService originservice-sample successfully reconciled
-```
+<p align="left">
+  <a href="https://linkedin.com/in/crvenna" target="_blank"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="35" /></a>
+  <a href="https://twitter.com/v_chalamareddy" target="_blank"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/twitter/twitter-original.svg" width="35" /></a>
+  <a href="https://instagram.com/mr._.chalama" target="_blank"><img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" width="35" /></a>
+</p>
 
 ---
 
-## 🔁 7. Automatic Reconciliation on Startup
+## ⚙️ Tech Stack  
 
-The operator automatically triggers reconciliation for existing CRs on startup (`main.go`):
-
-```go
-// Trigger reconciliation for existing OriginService CRs
-go func() {
-    time.Sleep(5 * time.Second)
-    client := mgr.GetClient()
-    var osList swacdv1alpha1.OriginServiceList
-    client.List(context.Background(), &osList)
-    for _, osvc := range osList.Items {
-        osvc.Annotations["reconcile-trigger"] = time.Now().Format(time.RFC3339)
-        client.Update(context.Background(), &osvc)
-    }
-}()
-```
+<p align="left">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" width="45"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" width="45"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" width="45"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" width="45"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ansible/ansible-original.svg" width="45"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/aws/aws-original.svg" width="45"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="45"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/grafana/grafana-original.svg" width="45"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" width="45"/>
+</p>
 
 ---
 
-## 📦 8. Git Workflow
+## 📊 GitHub Stats  
 
-Commit and push your changes:
-```bash
-git add .
-git commit -m "Working Tenant + OriginService controllers fully reconciled"
-git push origin main
-```
-
-Ignore local KCP data:
-```bash
-echo ".kcp/" >> .gitignore
-git rm -r --cached .kcp
-git add .gitignore
-git commit -m "Ignore local KCP data"
-git push origin main
-```
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=Chalama7&show_icons=true&theme=tokyonight" height="150" />
+  <img src="https://github-readme-streak-stats.herokuapp.com?user=Chalama7&theme=tokyonight" height="150" />
+</p>
 
 ---
 
-## 🧭 9. Next Steps
-
-- [ ] Add **EdgeRoute** CRD + Controller  
-- [ ] Add **Provider (Cloudflare / Akamai)** CRDs  
-- [ ] Extend reconciliation logic to API integration  
-- [ ] Document EKS + multi-cluster integration  
-
----
-
-## 🧾 Credits
-
-Developed and maintained by **Chalama Reddy Venna (Chalama7)**  
-SWACD Control Plane | Deloitte | JPMC | 2025  
+### ✍️ Fun Fact  
+> “I build clouds that serve clouds — and debug YAMLs like they owe me money.” ☁️⚙️  
