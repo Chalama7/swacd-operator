@@ -83,6 +83,18 @@ func (r *TenantReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	// Log Tenant spec details for demo visibility
 	log.Info("Tenant Spec details", "Lob", tenant.Spec.Lob, "Environment", tenant.Spec.Environment, "ContactEmail", tenant.Spec.ContactEmail)
 
+	// ✅ Update Tenant Status
+	tenant.Status.Phase = "Created"
+	tenant.Status.Message = "Tenant successfully reconciled"
+	tenant.Status.ObservedGeneration = tenant.Generation
+	tenant.Status.LastUpdated = metav1.Now()
+
+	if err := r.Status().Update(ctx, tenant); err != nil {
+		log.Error(err, "❌ Failed to update Tenant status")
+	} else {
+		log.Info("✅ Updated Tenant status successfully")
+	}
+
 	if err := r.Status().Update(ctx, tenant); err != nil {
 		log.Error(err, "unable to update Tenant status")
 		return ctrl.Result{}, err

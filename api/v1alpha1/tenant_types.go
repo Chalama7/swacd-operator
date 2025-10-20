@@ -18,10 +18,13 @@ type TenantSpec struct {
 	EdgeServiceProviders []EdgeProviderRef `json:"edgeServiceProviders,omitempty"`
 }
 
-// TenantStatus defines observed state
+// TenantStatus defines the observed state of Tenant
 type TenantStatus struct {
+	Phase              string             `json:"phase,omitempty"` // Created, Updated, Failed
 	ObservedGeneration int64              `json:"observedGeneration,omitempty"`
 	Conditions         []metav1.Condition `json:"conditions,omitempty"`
+	LastUpdated        metav1.Time        `json:"lastUpdated,omitempty"`
+	Message            string             `json:"message,omitempty"`
 }
 
 // +kubebuilder:object:root=true

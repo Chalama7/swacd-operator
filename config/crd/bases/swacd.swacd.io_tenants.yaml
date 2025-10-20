@@ -57,7 +57,7 @@ spec:
                 type: string
             type: object
           status:
-            description: TenantStatus defines observed state
+            description: TenantStatus defines the observed state of Tenant
             properties:
               conditions:
                 items:
@@ -115,9 +115,16 @@ spec:
                   - type
                   type: object
                 type: array
+              lastUpdated:
+                format: date-time
+                type: string
+              message:
+                type: string
               observedGeneration:
                 format: int64
                 type: integer
+              phase:
+                type: string
             type: object
         type: object
     served: true
