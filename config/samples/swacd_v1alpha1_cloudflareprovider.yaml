@@ -3,7 +3,8 @@ kind: CloudflareProvider
 metadata:
   name: cloudflare-prod
 spec:
-  accountID: "cf-account-123"
+  zoneName: edge.cloudcfg.io
+  accountID: "example-account-id"          # 🔹 Replace with your actual Cloudflare account ID
   apiTokenSecretRef:
-    name: cloudflare-api-token
-    key: token
+    name: cloudflare-api-token             # 🔹 Secret name in same namespace
+    key: apiToken                         # 🔹 Required key field inside the Secret

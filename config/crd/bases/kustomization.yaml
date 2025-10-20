@@ -1,0 +1,6 @@
+resources:
+- swacd.swacd.io_tenants.yaml
+- swacd.swacd.io_edgeroutes.yaml
+- swacd.swacd.io_originservices.yaml
+- swacd.swacd.io_akamaiproviders.yaml
+- swacd.swacd.io_cloudflareproviders.yaml

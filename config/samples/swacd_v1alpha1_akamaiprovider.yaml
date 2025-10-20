@@ -3,7 +3,7 @@ kind: AkamaiProvider
 metadata:
   name: akamai-prod
 spec:
-  contractID: "akm-contract-789"
+  configSection: default
   credentialSecretRef:
-    name: akamai-credential
-    key: credential
+    name: akamai-credentials               # 🔹 Secret name
+    key: edgerc                           # 🔹 Required key field inside that Secret
