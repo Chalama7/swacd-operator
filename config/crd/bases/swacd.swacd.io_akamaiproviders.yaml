@@ -36,26 +36,32 @@ spec:
           metadata:
             type: object
           spec:
+            description: AkamaiProviderSpec defines the desired state of AkamaiProvider
             properties:
-              contractID:
+              configSection:
                 type: string
               credentialSecretRef:
+                description: SecretRef defines a reference to a Kubernetes Secret
+                  key.
                 properties:
                   key:
+                    description: Key inside the Secret data
                     type: string
                   name:
+                    description: Name of the Secret
                     type: string
                 required:
                 - key
                 - name
                 type: object
             required:
-            - contractID
+            - configSection
             - credentialSecretRef
             type: object
           status:
+            description: AkamaiProviderStatus defines the observed state of AkamaiProvider
             properties:
-              phase:
+              state:
                 type: string
             type: object
         type: object

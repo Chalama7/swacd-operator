@@ -5,25 +5,16 @@ import (
 )
 
 type OriginServiceSpec struct {
-	Endpoint    string          `json:"endpoint"`
-	HealthCheck HealthCheckSpec `json:"healthCheck,omitempty"`
-	Auth        AuthSpec        `json:"auth,omitempty"`
-}
-
-type HealthCheckSpec struct {
-	Path string `json:"path"`
-}
-
-type AuthSpec struct {
-	TLS TLSConfig `json:"tls,omitempty"`
-}
-
-type TLSConfig struct {
-	Enabled bool `json:"enabled"`
+	Hostname        string `json:"hostname,omitempty"`
+	Protocol        string `json:"protocol,omitempty"`
+	Port            int    `json:"port,omitempty"`
+	HealthCheckPath string `json:"healthCheckPath,omitempty"`
 }
 
 type OriginServiceStatus struct {
-	Phase string `json:"phase,omitempty"`
+	State       string             `json:"state,omitempty"`
+	LastChecked string             `json:"lastChecked,omitempty"`
+	Conditions  []metav1.Condition `json:"conditions,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -31,13 +22,17 @@ type OriginServiceStatus struct {
 type OriginService struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   OriginServiceSpec   `json:"spec,omitempty"`
-	Status OriginServiceStatus `json:"status,omitempty"`
+	Spec              OriginServiceSpec   `json:"spec,omitempty"`
+	Status            OriginServiceStatus `json:"status,omitempty"`
 }
 
+// +kubebuilder:object:root=true
 type OriginServiceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []OriginService `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(&OriginService{}, &OriginServiceList{})
 }

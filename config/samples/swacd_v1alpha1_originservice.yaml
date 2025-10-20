@@ -1,9 +1,11 @@
 apiVersion: swacd.swacd.io/v1alpha1
 kind: OriginService
 metadata:
-  name: originservice-sample
+  name: acme-origin
 spec:
-  hostname: origin.swacd.internal
-  protocol: HTTP
-  port: 8080
-  healthCheckPath: /health
+  endpoint: "https://acme-origin.example.com"
+  healthCheck:
+    path: "/healthz"
+  auth:
+    tls:
+      enabled: true

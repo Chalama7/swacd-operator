@@ -4,22 +4,24 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// TenantSpec defines the desired state of Tenant
+type EdgeProviderRef struct {
+	Name string `json:"name,omitempty"`
+	Type string `json:"type,omitempty"`
+}
+
+// TenantSpec defines desired tenant configuration
 type TenantSpec struct {
-	// EdgeServiceProviders lists references to provider CRDs (Cloudflare, Akamai)
+	DisplayName          string            `json:"displayName,omitempty"`
+	Lob                  string            `json:"lob,omitempty"`
+	Environment          string            `json:"environment,omitempty"`
+	ContactEmail         string            `json:"contactEmail,omitempty"`
 	EdgeServiceProviders []EdgeProviderRef `json:"edgeServiceProviders,omitempty"`
 }
 
-// EdgeProviderRef defines a reference to a provider CRD
-type EdgeProviderRef struct {
-	APIGroup string `json:"apiGroup"`
-	Kind     string `json:"kind"`
-	Name     string `json:"name"`
-}
-
-// TenantStatus defines the observed state of Tenant
+// TenantStatus defines observed state
 type TenantStatus struct {
-	Phase string `json:"phase,omitempty"`
+	ObservedGeneration int64              `json:"observedGeneration,omitempty"`
+	Conditions         []metav1.Condition `json:"conditions,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -27,13 +29,17 @@ type TenantStatus struct {
 type Tenant struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   TenantSpec   `json:"spec,omitempty"`
-	Status TenantStatus `json:"status,omitempty"`
+	Spec              TenantSpec   `json:"spec,omitempty"`
+	Status            TenantStatus `json:"status,omitempty"`
 }
 
+// +kubebuilder:object:root=true
 type TenantList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []Tenant `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(&Tenant{}, &TenantList{})
 }

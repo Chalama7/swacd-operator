@@ -1,9 +1,10 @@
 apiVersion: swacd.swacd.io/v1alpha1
 kind: EdgeRoute
 metadata:
-  labels:
-    app.kubernetes.io/name: swacd-operator
-    app.kubernetes.io/managed-by: kustomize
-  name: edgeroute-sample
+  name: acme-edge-route
 spec:
-  # TODO(user): Add fields here
+  fqdn: "acme.edge.cloudcfg.io"
+  backendRefs:
+    - name: acme-origin
+  cache:
+    enabled: true

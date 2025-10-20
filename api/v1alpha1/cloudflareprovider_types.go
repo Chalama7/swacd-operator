@@ -4,18 +4,16 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// CloudflareProviderSpec defines the desired state of CloudflareProvider
 type CloudflareProviderSpec struct {
-	AccountID         string    `json:"accountID"`
 	APITokenSecretRef SecretRef `json:"apiTokenSecretRef"`
+	ZoneName          string    `json:"zoneName"`
+	AccountID         string    `json:"accountID"`
 }
 
-type SecretRef struct {
-	Name string `json:"name"`
-	Key  string `json:"key"`
-}
-
+// CloudflareProviderStatus defines the observed state of CloudflareProvider
 type CloudflareProviderStatus struct {
-	Phase string `json:"phase,omitempty"`
+	State string `json:"state,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -28,6 +26,7 @@ type CloudflareProvider struct {
 	Status CloudflareProviderStatus `json:"status,omitempty"`
 }
 
+// +kubebuilder:object:root=true
 type CloudflareProviderList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
