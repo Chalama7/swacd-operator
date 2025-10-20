@@ -22,6 +22,15 @@ resources:
 # default, aiding admins in cluster management. Those roles are
 # not used by the swacd-operator itself. You can comment the following lines
 # if you do not want those helpers be installed with your Project.
+- akamaiprovider_admin_role.yaml
+- akamaiprovider_editor_role.yaml
+- akamaiprovider_viewer_role.yaml
+- cloudflareprovider_admin_role.yaml
+- cloudflareprovider_editor_role.yaml
+- cloudflareprovider_viewer_role.yaml
+- edgeroute_admin_role.yaml
+- edgeroute_editor_role.yaml
+- edgeroute_viewer_role.yaml
 - originservice_admin_role.yaml
 - originservice_editor_role.yaml
 - originservice_viewer_role.yaml

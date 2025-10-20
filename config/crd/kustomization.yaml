@@ -4,6 +4,9 @@
 resources:
 - bases/swacd.swacd.io_tenants.yaml
 - bases/swacd.swacd.io_originservices.yaml
+- bases/swacd.swacd.io_edgeroutes.yaml
+- bases/swacd.swacd.io_cloudflareproviders.yaml
+- bases/swacd.swacd.io_akamaiproviders.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:

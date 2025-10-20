@@ -4,14 +4,14 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: tenants.swacd.swacd.io
+  name: cloudflareproviders.swacd.swacd.io
 spec:
   group: swacd.swacd.io
   names:
-    kind: Tenant
-    listKind: TenantList
-    plural: tenants
-    singular: tenant
+    kind: CloudflareProvider
+    listKind: CloudflareProviderList
+    plural: cloudflareproviders
+    singular: cloudflareprovider
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -36,29 +36,24 @@ spec:
           metadata:
             type: object
           spec:
-            description: TenantSpec defines the desired state of Tenant
             properties:
-              edgeServiceProviders:
-                description: EdgeServiceProviders lists references to provider CRDs
-                  (Cloudflare, Akamai)
-                items:
-                  description: EdgeProviderRef defines a reference to a provider CRD
-                  properties:
-                    apiGroup:
-                      type: string
-                    kind:
-                      type: string
-                    name:
-                      type: string
-                  required:
-                  - apiGroup
-                  - kind
-                  - name
-                  type: object
-                type: array
+              accountID:
+                type: string
+              apiTokenSecretRef:
+                properties:
+                  key:
+                    type: string
+                  name:
+                    type: string
+                required:
+                - key
+                - name
+                type: object
+            required:
+            - accountID
+            - apiTokenSecretRef
             type: object
           status:
-            description: TenantStatus defines the observed state of Tenant
             properties:
               phase:
                 type: string

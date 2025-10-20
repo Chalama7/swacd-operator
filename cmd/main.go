@@ -205,6 +205,27 @@ func main() {
 			setupLog.Error(err, "❌ Failed to list OriginService CRs")
 		}
 	}()
+	if err := (&controller.EdgeRouteReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "EdgeRoute")
+		os.Exit(1)
+	}
+	if err := (&controller.CloudflareProviderReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "CloudflareProvider")
+		os.Exit(1)
+	}
+	if err := (&controller.AkamaiProviderReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "AkamaiProvider")
+		os.Exit(1)
+	}
 	// +kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {

@@ -2,4 +2,7 @@
 resources:
 - swacd_v1alpha1_tenant.yaml
 - swacd_v1alpha1_originservice.yaml
+- swacd_v1alpha1_edgeroute.yaml
+- swacd_v1alpha1_cloudflareprovider.yaml
+- swacd_v1alpha1_akamaiprovider.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

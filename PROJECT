@@ -27,4 +27,31 @@ resources:
   kind: OriginService
   path: github.com/Chalama7/swacd-operator/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: swacd.io
+  group: swacd
+  kind: EdgeRoute
+  path: github.com/Chalama7/swacd-operator/api/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: swacd.io
+  group: swacd
+  kind: CloudflareProvider
+  path: github.com/Chalama7/swacd-operator/api/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: swacd.io
+  group: swacd
+  kind: AkamaiProvider
+  path: github.com/Chalama7/swacd-operator/api/v1alpha1
+  version: v1alpha1
 version: "3"

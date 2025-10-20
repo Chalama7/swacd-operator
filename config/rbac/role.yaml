@@ -7,6 +7,9 @@ rules:
 - apiGroups:
   - swacd.swacd.io
   resources:
+  - akamaiproviders
+  - cloudflareproviders
+  - edgeroutes
   - originservices
   - tenants
   verbs:
@@ -20,6 +23,9 @@ rules:
 - apiGroups:
   - swacd.swacd.io
   resources:
+  - akamaiproviders/finalizers
+  - cloudflareproviders/finalizers
+  - edgeroutes/finalizers
   - originservices/finalizers
   - tenants/finalizers
   verbs:
@@ -27,6 +33,9 @@ rules:
 - apiGroups:
   - swacd.swacd.io
   resources:
+  - akamaiproviders/status
+  - cloudflareproviders/status
+  - edgeroutes/status
   - originservices/status
   - tenants/status
   verbs:
