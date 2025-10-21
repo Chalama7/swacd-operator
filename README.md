@@ -1,195 +1,150 @@
-# 🧭 SWACD Operator — Local Development Setup and Flow
+# 🧩 SWACD Operator — Local Development Setup
 
-This operator implements Kubernetes-style controllers for the **SWACD Control Plane PoC**, managing `Tenant` and `OriginService` custom resources.  
-It supports full local reconciliation using `make`, `kubebuilder`, and `controller-runtime`.
+This repository contains the **SWACD Operator**, which defines and reconciles the core Custom Resources (CRDs) used in the **SWACD control plane POC** — built on top of **KCP (Kubernetes Control Plane)**.
 
----
-
-## ⚙️ 1. Prerequisites
-
-Make sure you have the following installed locally:
-
-```bash
-# Install dependencies
-brew install go@1.24
-brew install kubectl
-brew install kind
-brew install make
-```
-
-Then verify versions:
-
-```bash
-go version
-kubectl version --client
-make --version
-```
+It supports and reconciles the following resources:
+- 🧱 **Tenant**
+- 🔗 **OriginService**
+- 🌐 **EdgeRoute**
+- ☁️ **CloudflareProvider**
+- 🔒 **AkamaiProvider**
 
 ---
 
-## 🧱 2. Project Structure
+## 🧠 Prerequisites
 
-```
-swacd-operator/
-├── api/
-│   └── v1alpha1/
-│       ├── tenant_types.go
-│       ├── originservice_types.go
-│       ├── groupversion_info.go
-│
-├── internal/
-│   └── controller/
-│       ├── tenant_controller.go
-│       └── originservice_controller.go
-│
-├── config/
-│   ├── crd/bases/
-│   │   ├── swacd.swacd.io_tenants.yaml
-│   │   └── swacd.swacd.io_originservices.yaml
-│   ├── samples/
-│   │   ├── swacd_v1alpha1_tenant.yaml
-│   │   └── swacd_v1alpha1_originservice.yaml
-│
-└── cmd/
-    └── main.go
-```
+Ensure the following dependencies are installed **before running the operator**:
+
+| Tool | Recommended Version | Install Command / Notes |
+|------|---------------------|--------------------------|
+| **Go** | `1.22+` | [Install Go](https://go.dev/doc/install) |
+| **kubectl** | `1.28+` | `brew install kubectl` or follow [kubernetes.io/docs/tasks/tools](https://kubernetes.io/docs/tasks/tools/) |
+| **Docker** | Latest | Required for running KIND and controller images |
+| **KIND (Kubernetes in Docker)** | `v0.22+` | `go install sigs.k8s.io/kind@v0.22.0` |
+| **KCP (Kubernetes Control Plane)** | `v0.23.0-alpha.1` | Download zip → unzip → move to PATH |
+| **make** | default | Preinstalled on macOS/Linux |
+| **git** | latest | `brew install git` or OS default |
 
 ---
 
-## 🧩 3. Build and Install CRDs
+## ⚙️ Step-by-Step Setup Guide
 
-Generate CRDs and RBAC configs:
+### 1️⃣ Clone the Repository
 ```bash
-make generate
+git clone https://github.com/Chalama7/swacd-operator.git
+cd swacd-operator
+```
+
+### 2️⃣ Verify Go Dependencies
+```bash
+go mod tidy
+```
+
+### 3️⃣ Install Controller Tools (Kubebuilder utilities)
+```bash
+make install-tools
+```
+This installs the controller-gen binary at `bin/controller-gen`.
+
+### 4️⃣ Generate CRDs and DeepCopy Code
+```bash
 make manifests
+make generate
 ```
+This will:
+- Generate YAMLs under `config/crd/bases/`
+- Update deep-copy files under `api/v1alpha1/`
 
-Install CRDs into your cluster:
+### 5️⃣ Apply CRDs to Cluster (Local KIND or KCP)
+If using **KCP**:
+```bash
+# Start KCP
+./bin/kcp start
+# Export KUBECONFIG
+export KUBECONFIG=$(pwd)/.kcp/admin.kubeconfig
+```
+Then apply:
 ```bash
 make install
 ```
 
-Verify CRDs:
+Or for a local KIND cluster:
 ```bash
-kubectl get crds | grep swacd
+kind create cluster --name swacd-demo
+kubectl apply -k config/crd/
 ```
 
-You should see:
+### 6️⃣ Apply Sample Custom Resources
+```bash
+kubectl apply -k config/samples/
 ```
-tenants.swacd.swacd.io
-originservices.swacd.swacd.io
-```
+This installs demo objects:
+- `acme-tenant`
+- `acme-origin`
+- `acme-edge-route`
+- `cloudflare-prod`
+- `akamai-prod`
 
----
-
-## 🚀 4. Run Controllers Locally
-
-Start both controllers:
+### 7️⃣ Run the Controller
+Run locally (without building container image):
 ```bash
 make run
 ```
-
-You’ll see logs like:
+You should now see logs like:
 ```
-INFO setup starting manager
-INFO Starting Controller {"controller": "tenant"}
-INFO Starting Controller {"controller": "originservice"}
+✅ Reconciled Tenant successfully
+✅ Reconciled OriginService successfully
+✅ Reconciled EdgeRoute successfully
+✅ Reconciled CloudflareProvider successfully
+✅ Reconciled AkamaiProvider successfully
 ```
 
 ---
 
-## 🧠 5. Apply Sample CRDs
+## 📂 Directory Structure
+```
+swacd-operator/
+├── api/v1alpha1/              # CRD Go type definitions
+├── internal/controller/       # Reconciler logic for each CRD
+├── config/crd/bases/          # Generated CRDs
+├── config/samples/            # Example CR instances
+├── Makefile                   # Build + run automation
+└── bin/                       # Controller-gen binaries
+```
 
-### Tenant
+---
+
+## 🧪 Verify Reconciliation
+Run:
 ```bash
-kubectl apply -f config/samples/swacd_v1alpha1_tenant.yaml
-kubectl get tenants -o yaml
+kubectl get tenants,originservices,edgeroutes,cloudflareproviders,akamaiproviders -A
+```
+Example output:
+```
+NAMESPACE   NAME                                AGE
+default     tenant.swacd.swacd.io/acme-tenant   10m
+default     originservice.swacd.swacd.io/acme-origin   10m
+default     edgeroute.swacd.swacd.io/acme-edge-route   10m
+default     cloudflareprovider.swacd.swacd.io/cloudflare-prod   10m
+default     akamaiprovider.swacd.swacd.io/akamai-prod   10m
 ```
 
-### OriginService
+---
+
+## 🧹 Cleanup
+To remove all sample resources:
 ```bash
-kubectl apply -f config/samples/swacd_v1alpha1_originservice.yaml --validate=false
-kubectl get originservices -o yaml
+kubectl delete -k config/samples/
 ```
-
----
-
-## ✅ 6. Verify Reconciliation
-
-When running correctly, your logs should show:
-
-```
-INFO  Tenant Spec details
-INFO  ✅ Reconciled Tenant
-INFO  🔍 OriginService Spec details
-INFO  ✅ Reconciled OriginService
-```
-
-And your CRDs should reflect updated status fields:
-
-```yaml
-status:
-  state: Active
-  lastChecked: "2025-10-18T16:08:59-05:00"
-  conditions:
-  - type: Ready
-    status: "True"
-    reason: Reconciled
-    message: OriginService originservice-sample successfully reconciled
-```
-
----
-
-## 🔁 7. Automatic Reconciliation on Startup
-
-The operator automatically triggers reconciliation for existing CRs on startup (`main.go`):
-
-```go
-// Trigger reconciliation for existing OriginService CRs
-go func() {
-    time.Sleep(5 * time.Second)
-    client := mgr.GetClient()
-    var osList swacdv1alpha1.OriginServiceList
-    client.List(context.Background(), &osList)
-    for _, osvc := range osList.Items {
-        osvc.Annotations["reconcile-trigger"] = time.Now().Format(time.RFC3339)
-        client.Update(context.Background(), &osvc)
-    }
-}()
-```
-
----
-
-## 📦 8. Git Workflow
-
-Commit and push your changes:
+To delete the cluster:
 ```bash
-git add .
-git commit -m "Working Tenant + OriginService controllers fully reconciled"
-git push origin main
-```
-
-Ignore local KCP data:
-```bash
-echo ".kcp/" >> .gitignore
-git rm -r --cached .kcp
-git add .gitignore
-git commit -m "Ignore local KCP data"
-git push origin main
+kind delete cluster --name swacd-demo
 ```
 
 ---
 
-## 🧭 9. Next Steps
-
-- [ ] Add **EdgeRoute** CRD + Controller  
-- [ ] Add **Provider (Cloudflare / Akamai)** CRDs  
-- [ ] Extend reconciliation logic to API integration  
-- [ ] Document EKS + multi-cluster integration  
-
----
-
-## 🧾 Credits
-
-Developed and maintained by **Chalama Reddy Venna (Chalama7)**  
-SWACD Control Plane | Deloitte | JPMC | 2025  
+## 🧾 Notes
+- Tested on **macOS M4** and **Ubuntu 22.04**
+- Works on **KCP workspaces** (`root:swacd`) and **local KIND clusters**
+- All five CRDs reconcile locally and update status successfully
+- Default branch: `main` (merged from `feature/status-phase`)
