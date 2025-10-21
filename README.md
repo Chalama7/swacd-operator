@@ -1,17 +1,17 @@
-# 🧩 SWACD Operator — Local Development Setup
+#  SWACD Operator — Local Development Setup
 
 This repository contains the **SWACD Operator**, which defines and reconciles the core Custom Resources (CRDs) used in the **SWACD control plane POC** — built on top of **KCP (Kubernetes Control Plane)**.
 
 It supports and reconciles the following resources:
-- 🧱 **Tenant**
-- 🔗 **OriginService**
-- 🌐 **EdgeRoute**
-- ☁️ **CloudflareProvider**
-- 🔒 **AkamaiProvider**
+-  **Tenant**
+-  **OriginService**
+-  **EdgeRoute**
+-  **CloudflareProvider**
+-  **AkamaiProvider**
 
 ---
 
-## 🧠 Prerequisites
+## Prerequisites
 
 Ensure the following dependencies are installed **before running the operator**:
 
