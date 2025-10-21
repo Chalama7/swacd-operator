@@ -13,7 +13,11 @@ type CloudflareProviderSpec struct {
 
 // CloudflareProviderStatus defines the observed state of CloudflareProvider
 type CloudflareProviderStatus struct {
-	State string `json:"state,omitempty"`
+	Phase       string             `json:"phase,omitempty"`
+	LastChecked metav1.Time        `json:"lastChecked,omitempty"`
+	Conditions  []metav1.Condition `json:"conditions,omitempty"`
+	Connected   bool               `json:"connected,omitempty"`
+	Message     string             `json:"message,omitempty"`
 }
 
 // +kubebuilder:object:root=true

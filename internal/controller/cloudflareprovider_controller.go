@@ -18,7 +18,9 @@ package controller
 
 import (
 	"context"
+	"time"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -47,9 +49,40 @@ type CloudflareProviderReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.22.1/pkg/reconcile
 func (r *CloudflareProviderReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = logf.FromContext(ctx)
+	log := logf.FromContext(ctx).WithValues("controller", "cloudflareprovider", "name", req.Name, "namespace", req.Namespace)
 
-	// TODO(user): your logic here
+	var provider swacdv1alpha1.CloudflareProvider
+	if err := r.Get(ctx, req.NamespacedName, &provider); err != nil {
+		log.Error(err, "Failed to get CloudflareProvider")
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+
+	log.Info("Reconciling CloudflareProvider",
+		"apiTokenSecretRef", provider.Spec.APITokenSecretRef,
+		"zoneName", provider.Spec.ZoneName,
+		"accountID", provider.Spec.AccountID,
+	)
+
+	provider.Status.Phase = "Active"
+	provider.Status.Connected = true
+	provider.Status.Message = "Simulated Cloudflare API connectivity successful"
+	provider.Status.LastChecked = metav1.Now()
+	provider.Status.Conditions = []metav1.Condition{
+		{
+			Type:               "Ready",
+			Status:             metav1.ConditionTrue,
+			Reason:             "Simulated",
+			Message:            "Cloudflare API connectivity OK",
+			LastTransitionTime: metav1.NewTime(time.Now()),
+		},
+	}
+
+	if err := r.Status().Update(ctx, &provider); err != nil {
+		log.Error(err, "Failed to update CloudflareProvider status")
+		return ctrl.Result{}, err
+	}
+
+	log.Info("✅ Reconciled CloudflareProvider successfully")
 
 	return ctrl.Result{}, nil
 }
