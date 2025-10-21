@@ -38,9 +38,7 @@ spec:
           spec:
             description: AkamaiProviderSpec defines the desired state of AkamaiProvider
             properties:
-              configSection:
-                type: string
-              credentialSecretRef:
+              accessTokenSecretRef:
                 description: SecretRef defines a reference to a Kubernetes Secret
                   key.
                 properties:
@@ -54,9 +52,47 @@ spec:
                 - key
                 - name
                 type: object
+              baseURL:
+                type: string
+              clientSecretSecretRef:
+                description: SecretRef defines a reference to a Kubernetes Secret
+                  key.
+                properties:
+                  key:
+                    description: Key inside the Secret data
+                    type: string
+                  name:
+                    description: Name of the Secret
+                    type: string
+                required:
+                - key
+                - name
+                type: object
+              clientTokenSecretRef:
+                description: SecretRef defines a reference to a Kubernetes Secret
+                  key.
+                properties:
+                  key:
+                    description: Key inside the Secret data
+                    type: string
+                  name:
+                    description: Name of the Secret
+                    type: string
+                required:
+                - key
+                - name
+                type: object
+              contractID:
+                type: string
+              groupID:
+                type: string
             required:
-            - configSection
-            - credentialSecretRef
+            - accessTokenSecretRef
+            - baseURL
+            - clientSecretSecretRef
+            - clientTokenSecretRef
+            - contractID
+            - groupID
             type: object
           status:
             description: AkamaiProviderStatus defines the observed state of AkamaiProvider

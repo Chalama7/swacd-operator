@@ -3,7 +3,15 @@ kind: AkamaiProvider
 metadata:
   name: akamai-prod
 spec:
-  configSection: default
-  credentialSecretRef:
-    name: akamai-credentials               # 🔹 Secret name
-    key: edgerc                           # 🔹 Required key field inside that Secret
+  baseURL: "https://akaa-baseurl.luna.akamaiapis.net"
+  clientTokenSecretRef:
+    name: akamai-credentials
+    key: clientToken
+  clientSecretSecretRef:
+    name: akamai-credentials
+    key: clientSecret
+  accessTokenSecretRef:
+    name: akamai-credentials
+    key: accessToken
+  contractID: "ctr_1234"
+  groupID: "grp_5678"

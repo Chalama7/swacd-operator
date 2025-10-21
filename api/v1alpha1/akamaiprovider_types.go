@@ -6,8 +6,12 @@ import (
 
 // AkamaiProviderSpec defines the desired state of AkamaiProvider
 type AkamaiProviderSpec struct {
-	CredentialSecretRef SecretRef `json:"credentialSecretRef"`
-	ConfigSection       string    `json:"configSection"`
+	BaseURL               string    `json:"baseURL"`
+	ClientTokenSecretRef  SecretRef `json:"clientTokenSecretRef"`
+	ClientSecretSecretRef SecretRef `json:"clientSecretSecretRef"`
+	AccessTokenSecretRef  SecretRef `json:"accessTokenSecretRef"`
+	ContractID            string    `json:"contractID"`
+	GroupID               string    `json:"groupID"`
 }
 
 // AkamaiProviderStatus defines the observed state of AkamaiProvider
