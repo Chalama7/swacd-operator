@@ -1,0 +1,281 @@
+apiVersion: apis.kcp.io/v1alpha1
+kind: APIResourceSchema
+metadata:
+  name: v1alpha1.tenants.swacd.swacd.io
+spec:
+  group: swacd.swacd.io
+  names:
+    kind: Tenant
+    listKind: TenantList
+    plural: tenants
+    singular: tenant
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+          properties:
+            contactEmail:
+              type: string
+            displayName:
+              type: string
+            edgeServiceProviders:
+              type: array
+              items:
+                type: object
+            environment:
+              type: string
+            lob:
+              type: string
+        status:
+          type: object
+          properties:
+            phase:
+              type: string
+            conditions:
+              type: array
+              items:
+                type: object
+---
+apiVersion: apis.kcp.io/v1alpha1
+kind: APIResourceSchema
+metadata:
+  name: v1alpha1.originservices.swacd.swacd.io
+spec:
+  group: swacd.swacd.io
+  names:
+    kind: OriginService
+    listKind: OriginServiceList
+    plural: originservices
+    singular: originservice
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+          properties:
+            name:
+              type: string
+            backends:
+              type: array
+              items:
+                type: object
+            environment:
+              type: string
+        status:
+          type: object
+          properties:
+            phase:
+              type: string
+            conditions:
+              type: array
+              items:
+                type: object
+---
+apiVersion: apis.kcp.io/v1alpha1
+kind: APIResourceSchema
+metadata:
+  name: v1alpha1.edgeroutes.swacd.swacd.io
+spec:
+  group: swacd.swacd.io
+  names:
+    kind: EdgeRoute
+    listKind: EdgeRouteList
+    plural: edgeroutes
+    singular: edgeroute
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+          properties:
+            hostnames:
+              type: array
+              items:
+                type: string
+            originService:
+              type: object
+              properties:
+                name:
+                  type: string
+                namespace:
+                  type: string
+            edgeServiceProvider:
+              type: object
+              properties:
+                apiGroup:
+                  type: string
+                kind:
+                  type: string
+                name:
+                  type: string
+                namespace:
+                  type: string
+        status:
+          type: object
+          properties:
+            phase:
+              type: string
+            conditions:
+              type: array
+              items:
+                type: object
+---
+apiVersion: apis.kcp.io/v1alpha1
+kind: APIResourceSchema
+metadata:
+  name: v1alpha1.cloudflareproviders.swacd.swacd.io
+spec:
+  group: swacd.swacd.io
+  names:
+    kind: CloudflareProvider
+    listKind: CloudflareProviderList
+    plural: cloudflareproviders
+    singular: cloudflareprovider
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+          properties:
+            zoneName:
+              type: string
+            accountID:
+              type: string
+            apiTokenSecretRef:
+              type: object
+              properties:
+                name:
+                  type: string
+                key:
+                  type: string
+              required:
+              - key
+              - name
+        status:
+          type: object
+          properties:
+            phase:
+              type: string
+            conditions:
+              type: array
+              items:
+                type: object
+---
+apiVersion: apis.kcp.io/v1alpha1
+kind: APIResourceSchema
+metadata:
+  name: v1alpha1.akamaiproviders.swacd.swacd.io
+spec:
+  group: swacd.swacd.io
+  names:
+    kind: AkamaiProvider
+    listKind: AkamaiProviderList
+    plural: akamaiproviders
+    singular: akamaiprovider
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+          properties:
+            baseURL:
+              type: string
+            clientTokenSecretRef:
+              type: object
+              properties:
+                name:
+                  type: string
+                key:
+                  type: string
+              required:
+              - key
+              - name
+            clientSecretSecretRef:
+              type: object
+              properties:
+                name:
+                  type: string
+                key:
+                  type: string
+              required:
+              - key
+              - name
+            accessTokenSecretRef:
+              type: object
+              properties:
+                name:
+                  type: string
+                key:
+                  type: string
+              required:
+              - key
+              - name
+            contractID:
+              type: string
+            groupID:
+              type: string
+        status:
+          type: object
+          properties:
+            phase:
+              type: string
+            conditions:
+              type: array
+              items:
+                type: object

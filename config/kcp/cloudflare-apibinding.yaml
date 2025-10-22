@@ -1,0 +1,9 @@
+apiVersion: apis.kcp.io/v1alpha2
+kind: APIBinding
+metadata:
+  name: swacd-binding-cloudflare
+spec:
+  reference:
+    export:
+      path: "root:swacd"
+      name: swacd-apis

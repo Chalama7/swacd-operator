@@ -1,0 +1,31 @@
+apiVersion: apis.kcp.io/v1alpha2
+kind: APIExport
+metadata:
+  name: swacd-apis
+spec:
+  resources:
+  - group: swacd.swacd.io
+    name: tenants
+    schema: v1alpha1.tenants.swacd.swacd.io
+    storage:
+      crd: {}
+  - group: swacd.swacd.io
+    name: originservices
+    schema: v1alpha1.originservices.swacd.swacd.io
+    storage:
+      crd: {}
+  - group: swacd.swacd.io
+    name: edgeroutes
+    schema: v1alpha1.edgeroutes.swacd.swacd.io
+    storage:
+      crd: {}
+  - group: swacd.swacd.io
+    name: cloudflareproviders
+    schema: v1alpha1.cloudflareproviders.swacd.swacd.io
+    storage:
+      crd: {}
+  - group: swacd.swacd.io
+    name: akamaiproviders
+    schema: v1alpha1.akamaiproviders.swacd.swacd.io
+    storage:
+      crd: {}
