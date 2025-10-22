@@ -2,6 +2,7 @@ apiVersion: swacd.swacd.io/v1alpha1
 kind: AkamaiProvider
 metadata:
   name: akamai-prod
+  namespace: default
 spec:
   baseURL: "https://akaa-baseurl.luna.akamaiapis.net"
   clientTokenSecretRef:

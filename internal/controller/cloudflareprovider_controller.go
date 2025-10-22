@@ -21,18 +21,20 @@ import (
 	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	swacdv1alpha1 "github.com/Chalama7/swacd-operator/api/v1alpha1"
+
+	mcbuilder "sigs.k8s.io/multicluster-runtime/pkg/builder"
+	mcmanager "sigs.k8s.io/multicluster-runtime/pkg/manager"
+	mcreconcile "sigs.k8s.io/multicluster-runtime/pkg/reconcile"
 )
 
 // CloudflareProviderReconciler reconciles a CloudflareProvider object
 type CloudflareProviderReconciler struct {
-	client.Client
-	Scheme *runtime.Scheme
+	mgr mcmanager.Manager
 }
 
 // +kubebuilder:rbac:groups=swacd.swacd.io,resources=cloudflareproviders,verbs=get;list;watch;create;update;patch;delete
@@ -48,11 +50,19 @@ type CloudflareProviderReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.22.1/pkg/reconcile
-func (r *CloudflareProviderReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *CloudflareProviderReconciler) Reconcile(ctx context.Context, req mcreconcile.Request) (ctrl.Result, error) {
 	log := logf.FromContext(ctx).WithValues("controller", "cloudflareprovider", "name", req.Name, "namespace", req.Namespace)
+	log.Info("Detected cluster", "clusterName", req.ClusterName)
+
+	cl, err := r.mgr.GetCluster(ctx, req.ClusterName)
+	if err != nil {
+		log.Error(err, "Failed to get cluster")
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	cc := cl.GetClient()
 
 	var provider swacdv1alpha1.CloudflareProvider
-	if err := r.Get(ctx, req.NamespacedName, &provider); err != nil {
+	if err := cc.Get(ctx, req.NamespacedName, &provider); err != nil {
 		log.Error(err, "Failed to get CloudflareProvider")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
@@ -77,7 +87,7 @@ func (r *CloudflareProviderReconciler) Reconcile(ctx context.Context, req ctrl.R
 		},
 	}
 
-	if err := r.Status().Update(ctx, &provider); err != nil {
+	if err := cc.Status().Update(ctx, &provider); err != nil {
 		log.Error(err, "Failed to update CloudflareProvider status")
 		return ctrl.Result{}, err
 	}
@@ -88,8 +98,10 @@ func (r *CloudflareProviderReconciler) Reconcile(ctx context.Context, req ctrl.R
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *CloudflareProviderReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
+func (r *CloudflareProviderReconciler) SetupWithManager(mgr mcmanager.Manager) error {
+	r.mgr = mgr
+	return mcbuilder.
+		ControllerManagedBy(mgr).
 		For(&swacdv1alpha1.CloudflareProvider{}).
 		Named("cloudflareprovider").
 		Complete(r)

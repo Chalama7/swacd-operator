@@ -17,11 +17,9 @@ limitations under the License.
 package main
 
 import (
-	"context"
 	"crypto/tls"
 	"flag"
 	"os"
-	"time"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -39,6 +37,8 @@ import (
 
 	swacdv1alpha1 "github.com/Chalama7/swacd-operator/api/v1alpha1"
 	"github.com/Chalama7/swacd-operator/internal/controller"
+
+	mcmanager "sigs.k8s.io/multicluster-runtime/pkg/manager"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -156,7 +156,7 @@ func main() {
 		metricsServerOptions.KeyName = metricsCertKey
 	}
 
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
+	mgr, err := mcmanager.New(ctrl.GetConfigOrDie(), nil, ctrl.Options{
 		Scheme:                 scheme,
 		Metrics:                metricsServerOptions,
 		WebhookServer:          webhookServer,
@@ -184,45 +184,21 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Tenant")
 		os.Exit(1)
 	}
-	if err := (&controller.OriginServiceReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
+	if err := (&controller.OriginServiceReconciler{}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "OriginService")
 		os.Exit(1)
 	}
-	// --- Trigger reconcile for existing OriginService CRs on startup ---
-	go func() {
-		time.Sleep(5 * time.Second)
-		setupLog.Info("🔁 Triggering reconciliation for existing OriginService CRs...")
-		var osList swacdv1alpha1.OriginServiceList
-		if err := mgr.GetClient().List(context.Background(), &osList); err == nil {
-			for _, osvc := range osList.Items {
-				setupLog.Info("Requeuing OriginService", "name", osvc.Name)
-				_ = mgr.GetClient().Status().Update(context.Background(), &osvc)
-			}
-		} else {
-			setupLog.Error(err, "❌ Failed to list OriginService CRs")
-		}
-	}()
-	if err := (&controller.EdgeRouteReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
+	// Note: Multicluster runtime manager doesn't expose GetClient() directly
+	// This startup reconciliation would need to be implemented differently in a true multicluster setup
+	if err := (&controller.EdgeRouteReconciler{}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "EdgeRoute")
 		os.Exit(1)
 	}
-	if err := (&controller.CloudflareProviderReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
+	if err := (&controller.CloudflareProviderReconciler{}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "CloudflareProvider")
 		os.Exit(1)
 	}
-	if err := (&controller.AkamaiProviderReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
+	if err := (&controller.AkamaiProviderReconciler{}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "AkamaiProvider")
 		os.Exit(1)
 	}

@@ -45,10 +45,24 @@ spec:
               edgeServiceProviders:
                 items:
                   properties:
+                    apiGroup:
+                      description: APIGroup of the provider resource (e.g., "swacd.swacd.io")
+                      type: string
+                    kind:
+                      description: Kind of the provider resource (e.g., "CloudflareProvider",
+                        "AkamaiProvider")
+                      type: string
                     name:
+                      description: Name of the provider resource
                       type: string
-                    type:
+                    namespace:
+                      description: Namespace of the provider resource (optional, defaults
+                        to same namespace)
                       type: string
+                  required:
+                  - apiGroup
+                  - kind
+                  - name
                   type: object
                 type: array
               environment:

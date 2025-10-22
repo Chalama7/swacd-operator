@@ -2,6 +2,7 @@ apiVersion: swacd.swacd.io/v1alpha1
 kind: CloudflareProvider
 metadata:
   name: cloudflare-prod
+  namespace: default
 spec:
   zoneName: edge-demo.cloudcfg.io
   accountID: "example-account-id"          # 🔹 Replace with your actual Cloudflare account ID

@@ -22,18 +22,20 @@ import (
 	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	swacdv1alpha1 "github.com/Chalama7/swacd-operator/api/v1alpha1"
+
+	mcbuilder "sigs.k8s.io/multicluster-runtime/pkg/builder"
+	mcmanager "sigs.k8s.io/multicluster-runtime/pkg/manager"
+	mcreconcile "sigs.k8s.io/multicluster-runtime/pkg/reconcile"
 )
 
 // OriginServiceReconciler reconciles a OriginService object
 type OriginServiceReconciler struct {
-	client.Client
-	Scheme *runtime.Scheme
+	mgr mcmanager.Manager
 }
 
 // +kubebuilder:rbac:groups=swacd.swacd.io,resources=originservices,verbs=get;list;watch;create;update;patch;delete
@@ -49,8 +51,9 @@ type OriginServiceReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.22.1/pkg/reconcile
-func (r *OriginServiceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *OriginServiceReconciler) Reconcile(ctx context.Context, req mcreconcile.Request) (ctrl.Result, error) {
 	log := logf.FromContext(ctx)
+	log.Info("Detected cluster", "clusterName", req.ClusterName)
 
 	log.Info("🚀 Starting reconciliation for OriginService", "name", req.NamespacedName)
 
@@ -58,8 +61,15 @@ func (r *OriginServiceReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		log.Info("✅ Finished reconciliation for OriginService", "name", req.NamespacedName)
 	}()
 
+	cl, err := r.mgr.GetCluster(ctx, req.ClusterName)
+	if err != nil {
+		log.Error(err, "Failed to get cluster")
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	cc := cl.GetClient()
+
 	var originService swacdv1alpha1.OriginService
-	if err := r.Get(ctx, req.NamespacedName, &originService); err != nil {
+	if err := cc.Get(ctx, req.NamespacedName, &originService); err != nil {
 		log.Error(err, "❌ Failed to get OriginService")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
@@ -103,7 +113,7 @@ func (r *OriginServiceReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	filteredConditions = append(filteredConditions, condition)
 	originService.Status.Conditions = filteredConditions
 
-	if err := r.Status().Update(ctx, &originService); err != nil {
+	if err := cc.Status().Update(ctx, &originService); err != nil {
 		log.Error(err, "❌ Failed to update OriginService status")
 		return ctrl.Result{}, err
 	}
@@ -118,8 +128,10 @@ func (r *OriginServiceReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *OriginServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
+func (r *OriginServiceReconciler) SetupWithManager(mgr mcmanager.Manager) error {
+	r.mgr = mgr
+	return mcbuilder.
+		ControllerManagedBy(mgr).
 		For(&swacdv1alpha1.OriginService{}).
 		Named("originservice").
 		Complete(r)

@@ -2,6 +2,7 @@ apiVersion: swacd.swacd.io/v1alpha1
 kind: OriginService
 metadata:
   name: acme-origin
+  namespace: default
 spec:
   hostname: dp53cw9qm2h5h.cloudfront.net  # Example CloudFront origin
   protocol: https

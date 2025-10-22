@@ -1,7 +1,8 @@
 apiVersion: swacd.swacd.io/v1alpha1
 kind: EdgeRoute
 metadata:
-  name: acme-edge-route
+  name: acme-route
+  namespace: default
 spec:
   fqdn: "acme.edge.cloudcfg.io"
   backendRefs:
