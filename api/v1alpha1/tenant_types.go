@@ -5,8 +5,14 @@ import (
 )
 
 type EdgeProviderRef struct {
-	Name string `json:"name,omitempty"`
-	Type string `json:"type,omitempty"`
+	// Name of the provider resource
+	Name string `json:"name"`
+	// APIGroup of the provider resource (e.g., "swacd.swacd.io")
+	APIGroup string `json:"apiGroup"`
+	// Kind of the provider resource (e.g., "CloudflareProvider", "AkamaiProvider")
+	Kind string `json:"kind"`
+	// Namespace of the provider resource (optional, defaults to same namespace)
+	Namespace string `json:"namespace,omitempty"`
 }
 
 // TenantSpec defines desired tenant configuration

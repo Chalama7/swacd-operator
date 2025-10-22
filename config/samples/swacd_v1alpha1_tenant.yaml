@@ -2,12 +2,18 @@ apiVersion: swacd.swacd.io/v1alpha1
 kind: Tenant
 metadata:
   name: acme-tenant
+  namespace: default
 spec:
   displayName: "ACME Demo Tenant"
+  lob: "demo"
+  environment: "production"
+  contactEmail: "admin@acme.com"
   edgeServiceProviders:
-    - apiGroup: swacd.swacd.io
+    - name: cloudflare-prod
+      apiGroup: swacd.swacd.io
       kind: CloudflareProvider
-      name: cloudflare-prod
-    - apiGroup: swacd.swacd.io
+      namespace: default
+    - name: akamai-prod
+      apiGroup: swacd.swacd.io
       kind: AkamaiProvider
-      name: akamai-prod
+      namespace: default

@@ -1,6 +1,8 @@
-#  SWACD Operator — Local Development Setup
+#  SWACD Operator — Multicluster Controller Runtime
 
-This repository contains the **SWACD Operator**, which defines and reconciles the core Custom Resources (CRDs) used in the **SWACD control plane POC** — built on top of **KCP (Kubernetes Control Plane)**.
+This repository contains the **SWACD Operator**, which defines and reconciles the core Custom Resources (CRDs) used in the **SWACD control plane POC**. 
+
+**🚀 NEW**: This operator has been **converted to use multicluster controller-runtime** for cluster-aware resource management across multiple Kubernetes clusters.
 
 It supports and reconciles the following resources:
 -  **Tenant**
@@ -8,6 +10,10 @@ It supports and reconciles the following resources:
 -  **EdgeRoute**
 -  **CloudflareProvider**
 -  **AkamaiProvider**
+
+## 🎯 Quick Start for New Users
+
+**New to this repo?** See [MULTICLUSTER-SETUP.md](./MULTICLUSTER-SETUP.md) for complete setup instructions.
 
 ---
 

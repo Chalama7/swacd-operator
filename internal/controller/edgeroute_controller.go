@@ -9,31 +9,41 @@ import (
 	"time"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	swacdv1alpha1 "github.com/Chalama7/swacd-operator/api/v1alpha1"
+
+	mcbuilder "sigs.k8s.io/multicluster-runtime/pkg/builder"
+	mcmanager "sigs.k8s.io/multicluster-runtime/pkg/manager"
+	mcreconcile "sigs.k8s.io/multicluster-runtime/pkg/reconcile"
 )
 
 // EdgeRouteReconciler reconciles an EdgeRoute object
 type EdgeRouteReconciler struct {
-	client.Client
-	Scheme *runtime.Scheme
+	mgr mcmanager.Manager
 }
 
 // +kubebuilder:rbac:groups=swacd.swacd.io,resources=edgeroutes,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=swacd.swacd.io,resources=edgeroutes/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=swacd.swacd.io,resources=edgeroutes/finalizers,verbs=update
 
-func (r *EdgeRouteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *EdgeRouteReconciler) Reconcile(ctx context.Context, req mcreconcile.Request) (ctrl.Result, error) {
 	logger := logf.FromContext(ctx).WithValues("EdgeRoute", req.NamespacedName)
 	logger.Info("🚀 Starting reconciliation for EdgeRoute")
+	logger.Info("Detected cluster", "clusterName", req.ClusterName)
+
+	cl, err := r.mgr.GetCluster(ctx, req.ClusterName)
+	if err != nil {
+		logger.Error(err, "Failed to get cluster")
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	cc := cl.GetClient()
 
 	// Fetch the EdgeRoute instance
 	var route swacdv1alpha1.EdgeRoute
-	if err := r.Get(ctx, req.NamespacedName, &route); err != nil {
+	if err := cc.Get(ctx, req.NamespacedName, &route); err != nil {
 		logger.Error(err, "❌ Unable to fetch EdgeRoute")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
@@ -66,7 +76,7 @@ func (r *EdgeRouteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	route.Status.Conditions = []v1.Condition{condition}
 
 	// Apply status update
-	if err := r.Status().Update(ctx, &route); err != nil {
+	if err := cc.Status().Update(ctx, &route); err != nil {
 		logger.Error(err, "❌ Failed to update EdgeRoute status")
 		return ctrl.Result{}, err
 	}
@@ -85,8 +95,10 @@ func (r *EdgeRouteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
 }
 
-func (r *EdgeRouteReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
+func (r *EdgeRouteReconciler) SetupWithManager(mgr mcmanager.Manager) error {
+	r.mgr = mgr
+	return mcbuilder.
+		ControllerManagedBy(mgr).
 		For(&swacdv1alpha1.EdgeRoute{}).
 		Named("edgeroute").
 		Complete(r)
