@@ -150,7 +150,7 @@ kind delete cluster --name swacd-demo
 ---
 
 ## 🧾 Notes
-- Tested on **macOS M4** and **Ubuntu 22.04**
-- Works on **KCP workspaces** (`root:swacd`) and **local KIND clusters**
+- Tested on **macOS M4** 
+- Works on **KCP workspaces** (`root:swacd`).
 - All five CRDs reconcile locally and update status successfully
 - Default branch: `main` (merged from `feature/status-phase`)
