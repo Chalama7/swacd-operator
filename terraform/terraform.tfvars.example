@@ -1,0 +1,40 @@
+# SWACD EKS Cluster Configuration
+# Copy this file to terraform.tfvars and customize for your deployment
+
+# AWS Configuration
+aws_region = "us-east-1"  # JP Morgan sandbox region
+aws_profile = "adfs"      # PCL toolkit default profile
+
+# Cluster Configuration
+cluster_name = "swacd-cluster"
+environment  = "dev"
+owner        = "DevOps-Team"
+
+# Kubernetes version
+kubernetes_version = "1.28"
+
+# Network Configuration - Using Default VPC
+# No VPC configuration needed - using existing default VPC
+
+# Node Group Configuration (Minimal setup for demo)
+node_instance_types      = ["t3.small"]  # Smallest EKS-compatible instance
+node_group_min_size     = 1
+node_group_max_size     = 5
+node_group_desired_size = 2
+
+# SWACD Configuration
+enable_swacd_security_rules = true
+
+# Add-ons
+enable_cluster_autoscaler           = true
+enable_aws_load_balancer_controller = true
+enable_cert_manager                 = true
+enable_external_dns                 = false
+
+# Example production values (uncomment and modify as needed):
+# cluster_name = "swacd-prod"
+# environment  = "production"
+# node_instance_types = ["m5.large", "m5.xlarge"]
+# node_group_desired_size = 6
+# single_nat_gateway = false
+# enable_external_dns = true
