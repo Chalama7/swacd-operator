@@ -47,4 +47,4 @@ kubectl cluster-info || echo "Cluster info not available"
 
 echo
 
-echo "✅ KCP + Helm + Ingress + Workspaces check complete"
+echo " KCP + Helm + Ingress + Workspaces check complete"
