@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kcp.fullname" . }}
+  labels:
+    app: {{ include "kcp.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "kcp.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "kcp.name" . }}
+    spec:
+      containers:
+        - name: kcp
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 6443
+          args:
+            - start
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          emptyDir: {}

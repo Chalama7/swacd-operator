@@ -1,0 +1,17 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/kcp-dev/kcp
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 6443
+
+ingress:
+  enabled: true
+  className: nginx
+  host: kcp.local
+
+resources: {}
