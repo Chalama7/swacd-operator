@@ -1,4 +1,4 @@
-# 🧭 SWACD Operator – Multi-Project Scaffold
+#  SWACD Operator – Multi-Project Scaffold
 
 This repository hosts the **Secure Web API and Content Delivery (SWACD)** control-plane operators for JPMC’s next-generation multi-tenant edge platform.  
 It combines **KCP (Kubernetes Control Plane)** orchestration with multiple **Kubebuilder-based operators** for Cloudflare, Akamai, Hostmaster (DNS), and CKMS (certs/keys).
@@ -36,7 +36,7 @@ Each sub-project includes:
 
 ---
 
-## 🏗️ Local KCP Deployment (Helm)
+##  Local KCP Deployment (Helm)
 
 ```bash
 #  Create working directory
