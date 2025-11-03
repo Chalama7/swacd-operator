@@ -5,17 +5,17 @@ It combines **KCP (Kubernetes Control Plane)** orchestration with multiple **Kub
 
 ---
 
-## 🚀 Current Status (Phase 1 Completed)
+Current Status (Phase 1 Completed)
 
-✅ **KCP deployed locally via Helm**  
-✅ **Ingress configured with HTTPS (https://kcp.local)**  
-✅ **Workspaces created (root → swacd → providers/lob/tenants)**  
-✅ **Helm validation script (`check-swacd.sh`) working**  
-✅ **Multi-project Kubebuilder scaffold created & pushed (`feature/multi-project-scaffold`)**
+ **KCP deployed locally via Helm**  
+ **Ingress configured with HTTPS (https://kcp.local)**  
+ **Workspaces created (root → swacd → providers/lob/tenants)**  
+ **Helm validation script (`check-swacd.sh`) working**  
+ **Multi-project Kubebuilder scaffold created & pushed (`feature/multi-project-scaffold`)**
 
 ---
 
-## 🧩 Repository Structure
+## Repository Structure
 
 ```text
 swacd-operator/
@@ -39,36 +39,36 @@ Each sub-project includes:
 ## 🏗️ Local KCP Deployment (Helm)
 
 ```bash
-# 1️⃣ Create working directory
+#  Create working directory
 mkdir ~/kcp-helm-demo && cd ~/kcp-helm-demo
 
-# 2️⃣ Create Helm chart
+#  Create Helm chart
 helm create kcp
 # Update Chart.yaml, values.yaml, deployment.yaml, service.yaml, ingress.yaml as per repo
 
-# 3️⃣ Create KIND cluster
+# Create KIND cluster
 kind create cluster --name kcp-demo
 
-# 4️⃣ Deploy KCP using Helm
+# Deploy KCP using Helm
 helm upgrade --install my-kcp ./kcp -f ./kcp/values.yaml
 
-# 5️⃣ Verify resources
+# Verify resources
 kubectl get pods -A
 kubectl get svc -A
 kubectl get ingress -A
 
-# 6️⃣ Add local DNS entry
+# Add local DNS entry
 sudo vim /etc/hosts
 127.0.0.1 kcp.local
 127.0.0.1 my-kcp.local
 
-# 7️⃣ Access in browser
+# Access in browser
 https://kcp.local   # should return 403 (expected)
 ```
 
 ---
 
-## 🧠 Workspace Tree Validation
+## Workspace Tree Validation
 
 After port-forwarding:
 ```bash
@@ -93,7 +93,7 @@ Expected tree:
 
 ---
 
-## 🧾 Environment Validation Script
+## Environment Validation Script
 
 `check-swacd.sh`
 ```bash
@@ -122,7 +122,7 @@ fi
 
 kubectl cluster-info || echo "Cluster info not available"
 echo
-echo "✅ KCP + Helm + Ingress + Workspaces check complete"
+echo "KCP + Helm + Ingress + Workspaces check complete"
 ```
 
 Run with:
@@ -133,16 +133,16 @@ chmod +x check-swacd.sh
 
 ---
 
-## 🧱 Multi-Project Scaffold Creation
+## Multi-Project Scaffold Creation
 
 ```bash
-# 1️⃣ Create a feature branch
+#  Create a feature branch
 git checkout -b feature/multi-project-scaffold
 
-# 2️⃣ Create sub-projects
+#  Create sub-projects
 mkdir -p ucp swacd cloudflare akamai hostmaster ckms
 
-# 3️⃣ Initialize Kubebuilder for each
+# Initialize Kubebuilder for each
 cd ucp
 kubebuilder init --domain=internal.jpmc --owner 'JPMC'   --repo=github.com/Chalama7/swacd-operator/ucp
 
@@ -164,7 +164,7 @@ kubebuilder init --domain=ckms.internal.jpmc --owner 'JPMC'   --repo=github.com/
 
 ---
 
-## 🧩 Git Workflow
+##  Git Workflow
 
 ```bash
 # Commit & push
@@ -179,7 +179,7 @@ git push -u origin feature/multi-project-scaffold
 
 ---
 
-## 🔮 Next Steps
+## Next Steps
 
 1. **Define CRDs** inside `swacd/`:
    ```bash
@@ -199,7 +199,7 @@ git push -u origin feature/multi-project-scaffold
 
 ---
 
-## 🧠 Authors
+## Authors
 - **Chalama Reddy Venna** – SWACD Control Plane Engineer  
 - **Cody (Architect)** – Technical guidance  
 - **Team:** JPMC / Deloitte Cloud & Network Engineering  
